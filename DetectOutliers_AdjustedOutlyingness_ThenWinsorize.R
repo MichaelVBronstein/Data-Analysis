@@ -1,10 +1,10 @@
 #variables to alter before running
 
 FileName = "TEST.csv";
-Path = "C:\\Users\\brons\\Desktop";
+Path = "*INSERT PATH WHERE DATA IS LOCATED HERE*";
 FirstColumnToScan = 1;
-LastColumnToScan = 4;
-Output_File = '.csv'
+LastColumnToScan = 5;
+Output_File = "NewData"
 
 #end variables
 
@@ -19,7 +19,10 @@ NewData <- OriginalData;
 for (column in FirstColumnToScan:LastColumnToScan){
 	Z1 <-adjOutlyingness(OriginalData[,column]);
 	OutlierRows <- which(Z1$nonOut == FALSE);
-	print(OutlierRows)
+	if (length(OutlierRows) > 0) {
+		print(paste("Outliers Detected in Column: ", column))
+		print(paste("Outliers in row(s): ", OutlierRows))
+	}
 	NewData[OutlierRows,column] <- -Inf;
 	NonOutMax <- max(NewData[,column]);
 	NewData[OutlierRows,column] <- Inf;
@@ -32,4 +35,4 @@ for (column in FirstColumnToScan:LastColumnToScan){
 	
 }  
 
-write.csv(NewData,paste(strsplit(FileName,'.csv'),'_AO_W','.csv',sep=''))
+write.csv(NewData,paste(strsplit(Output_File,'.csv'),'_AO_W','.csv',sep=''))
